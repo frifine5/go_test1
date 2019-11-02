@@ -17,6 +17,7 @@ func main(){
 
 	f1p := "/home/tmp"
 	ftxt := "测试写文件的一行数据___+_+!___abcdefghijklmnopqrstuvwxyz0123456789."
+	ftxt = fmt.Sprintf("1:%d, 2:%s", 100, "abc")
 
 	//TestWrite1(f1p, ftxt)
 	TestWrite2(f1p, ftxt)
