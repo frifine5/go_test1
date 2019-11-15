@@ -11,6 +11,7 @@ import (
 var ak = "OM65GZAEBJQAX9EFZVAX"
 var sk = "d4VGQ3gqxh8uWtbN18wKyUIhe1cbF16PAW2l6MAJ"
 var endpoint = "http://172.20.2.10:80"
+var bucket = "obs-dc-dzqz"
 
 var config = obs.WithConnectTimeout(15)
 
@@ -43,8 +44,9 @@ func download(){
 	}
 
 	input := &obs.GetObjectInput{}
-	input.Bucket = "obs-dc-dzqz"
+	input.Bucket = bucket
 	input.Key = key
+
 	// 下载对象
 	output, err := obsClient.GetObject(input)
 	if err == nil {
@@ -54,19 +56,22 @@ func download(){
 		p := make([]byte, 1024)
 		var readErr error
 		var readCount int
+
 		// 读取对象内容
 		for {
 			readCount, readErr = output.Body.Read(p)
+			if readErr != nil {
+				fmt.Println(readErr)
+				fmt.Println("读取出错")
+				return
+			}
 			if readCount > 0 {
 				//fmt.Printf("%s", p[:readCount])
 			}
 			obsWrite2( key, p)
-			if readErr != nil {
-				break
-			}
+
 		}
 		fmt.Printf("down %s finish\n", key)
-
 	} else if obsError, ok := err.(obs.ObsError); ok {
 		fmt.Printf("Code:%s\n", obsError.Code)
 		fmt.Printf("Message:%s\n", obsError.Message)
