@@ -67,8 +67,8 @@ func download(){
 			}
 			if readCount > 0 {
 				//fmt.Printf("%s", p[:readCount])
+				obsWrite2( key, p)
 			}
-			obsWrite2( key, p)
 
 		}
 		fmt.Printf("down %s finish\n", key)
