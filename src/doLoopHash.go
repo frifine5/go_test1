@@ -10,6 +10,7 @@ import (
 	"time"
 	"github.com/tealeg/xlsx"
 	"strconv"
+	"os"
 )
 
 type rs1 struct {
@@ -210,6 +211,27 @@ func getFileList(dir string) []string {
 	return flist
 }
 
+func wrd(fpdir string){
+
+/*	if ioutil.WriteFile(fpdir+"/finish-record",
+		[]byte(  "finish time: "+ time.Now().Format("2006-01-02 15:04:05")), 0644) == nil {
+		fmt.Println("\nfinish one file and record success...")
+	}
+*/
+	fp := fpdir + "/finish-record"
+	fileObj,err := os.OpenFile(fp,os.O_RDWR|os.O_CREATE|os.O_APPEND,0644) //  |os.O_TRUNC
+	if err != nil {
+		fmt.Println("Failed to open the file",err.Error())
+		return
+	}
+	defer fileObj.Close()
+	data := []byte("finish time: "+ time.Now().Format("2006-01-02 15:04:05") +"\n")
+	if _,err := fileObj.Write(data);err == nil {
+		fmt.Println("Successful finish one file and record it..")
+	}
+
+}
+
 func main() {
 
 	fpdir := "list"
@@ -221,11 +243,11 @@ func main() {
 
 	for _, fp0 := range flist {
 		fp0 = fpdir + "/" + fp0
+
 		doOneFile(fp0, rndfile)
-		if ioutil.WriteFile(fpdir+fp0+"-finish-record",
-			[]byte(  "finish time: "+ time.Now().Format("2006-01-02 15:04:05")), 0644) == nil {
-			fmt.Println("\nfinish one file and record success...")
-		}
+
+		wrd(fpdir)
+
 		time.Sleep(time.Second * 10) // 歇息10秒
 	}
 
