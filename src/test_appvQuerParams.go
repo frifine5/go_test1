@@ -106,8 +106,12 @@ func main(){
 		fmt.Print( strconv.Itoa(clss[i].Grade) +"年级" + clss[i].Name  + "\t")
 	}
 
-
-
-
+	fmt.Println()
+	s2, e := json.Marshal(clss)
+	if e !=nil{
+		fmt.Println(e)
+	}else{
+		fmt.Println(string(s2))
+	}
 
 }

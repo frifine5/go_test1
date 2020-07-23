@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
+	"encoding/json"
 )
 
 type User struct {
@@ -27,14 +28,35 @@ func PrepareQuery(db *sql.DB, id int) {
 	defer stmt.Close()
 	defer rows.Close()
 
+
+	var users []User
+
 	for rows.Next(){
 		var user User
 		err := rows.Scan(&user.Id, &user.Name, &user.Age)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("user: %#v\n", user)
+		//fmt.Printf("user: %#v\n", user)
+
+		ubs, e := json.Marshal(user)
+		if e !=nil{
+			fmt.Println(nil)
+		}else{
+			fmt.Println(string(ubs))
+			users = append(users, user)
+		}
+
 	}
+
+	s, e := json.Marshal(users)
+	if e !=nil{
+		fmt.Println(nil)
+	}else{
+		fmt.Println(string(s))
+	}
+
+
 }
 
 // insert
@@ -108,12 +130,12 @@ func main() {
 	defer db.Close()
 
 	PrepareQuery(db, 0)
-	Insert(db)
+	//Insert(db)
 	//Delete(db, 18)
 	//Update(db)
 
 
-	fmt.Println("--------- end execute-----------")
-	PrepareQuery(db, 0)
+	//fmt.Println("--------- end execute-----------")
+	//PrepareQuery(db, 0)
 
 }
